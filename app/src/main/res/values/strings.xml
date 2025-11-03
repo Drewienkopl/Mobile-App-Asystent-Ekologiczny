@@ -31,9 +31,11 @@
     <string name="store_label">Sklep: %1$s</string>
     <string name="purchase_date_label">Data zakupu: %1$s</string>
 
-    <string name="tooltip_sort_by_price">Sortuj po cenie</string>
-    <string name="tooltip_switch_to_grid">Widok</string>
+    <string name="tooltip_sort_by_price">Sort by Price</string>
+    <string name="tooltip_switch_to_grid">View</string>
+    <string name="tooltip_add_product">Add Product</string>
 
+    <string name="products_count">Products: %1$d</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

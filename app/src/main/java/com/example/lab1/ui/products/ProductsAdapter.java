@@ -19,6 +19,7 @@ import com.google.android.material.color.MaterialColors;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -28,6 +29,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
 
 
     private List<Product> productList;
+    private List<Product> originalList;
     private final OnItemClickListener listener;
 
 
@@ -38,15 +40,34 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
 
     public ProductsAdapter(List<Product> productList, OnItemClickListener listener) {
         this.productList = productList;
+        this.originalList = new ArrayList<>(productList);
         this.listener = listener;
     }
 
 
     public void updateData(List<Product> newList) {
-        this.productList = newList;
+        this.productList = new ArrayList<>(newList);
+        if (this.originalList == null || this.originalList.isEmpty()) {
+            this.originalList = new ArrayList<>(newList);
+        }
         notifyDataSetChanged();
     }
 
+    public void filter(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            productList = new ArrayList<>(originalList);
+        } else {
+            String q = query.toLowerCase(Locale.getDefault()).trim();
+            List<Product> filtered = new ArrayList<>();
+            for (Product p : originalList) {
+                if (p.getName() != null && p.getName().toLowerCase(Locale.getDefault()).contains(q)) {
+                    filtered.add(p);
+                }
+            }
+            productList = filtered;
+        }
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override
@@ -83,7 +104,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         );
 
 
-        // Podświetlenie produktów po terminie
+        // Podswietlenie produktow po terminie
         if (product.getExpiryDate() != null && !product.getExpiryDate().isEmpty()) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             try {
@@ -94,7 +115,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
                     holder.itemView.setBackgroundColor(normalBg);
                 }
             } catch (ParseException e) {
-                // jeżeli nie uda się sparsować daty — pozostaw białe tło
+                // jezeli nie uda się sparsowac daty to zostaw normalne tlo
                 holder.itemView.setBackgroundColor(normalBg);
             }
         } else {
@@ -112,7 +133,6 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
     public int getItemCount() {
         return productList == null ? 0 : productList.size();
     }
-
 
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
         TextView textName, textCategory, textPrice, textExpiry;
