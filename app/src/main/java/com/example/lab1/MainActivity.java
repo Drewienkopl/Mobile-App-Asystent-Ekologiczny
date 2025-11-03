@@ -1,10 +1,12 @@
 package com.example.lab1;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;

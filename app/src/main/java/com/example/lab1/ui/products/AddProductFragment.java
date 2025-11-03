@@ -75,7 +75,7 @@ public class AddProductFragment extends Fragment {
             price = Double.parseDouble(priceStr);
             if (price < 0) throw new NumberFormatException();
         } catch (NumberFormatException e) {
-            binding.etPrice.setError("Niepoprawna cean");
+            binding.etPrice.setError("Niepoprawna cena");
         }
 
         // expiry format check

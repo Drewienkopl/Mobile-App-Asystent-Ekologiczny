@@ -1,43 +1,43 @@
 package com.example.lab1.ui.settings;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-
+import androidx.appcompat.app.AppCompatDelegate;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import com.example.lab1.databinding.FragmentSettingsBinding;
 
 
 import com.example.lab1.databinding.FragmentSettingsBinding;
 
 public class SettingsFragment extends Fragment {
+    private FragmentSettingsBinding binding;
+    private SharedPreferences prefs;
 
     public SettingsFragment() {
         // Required empty public constructor
     }
 
-    private FragmentSettingsBinding binding;
-
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        SettingsViewModel settingsViewModel =
-                new ViewModelProvider(this).get(SettingsViewModel.class);
-
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        prefs = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+        boolean dark = prefs.getBoolean("pref_dark_mode", false);
+        binding.switchTheme.setChecked(dark);
 
-        final TextView textView = binding.textSettings;
-        settingsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-        return root;
+        binding.switchTheme.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            prefs.edit().putBoolean("pref_dark_mode", isChecked).apply();
+            AppCompatDelegate.setDefaultNightMode(isChecked ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+        });
+
+        return binding.getRoot();
     }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
-    }
+        binding = null; }
 }
