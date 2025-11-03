@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">lab1</string>
+    <string name="app_name">Eco-Assistant</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -11,6 +11,26 @@
     <string name="menu_products">Products</string>
     <string name="menu_reports">Reports</string>
     <string name="menu_settings">Settings</string>
+
+    <string name="hint_nazwa_produktu">Nazwa produktu</string>
+    <string name="hint_cena_produktu">Cena produktu</string>
+    <string name="hint_data_waznosci_produktu">Data ważności (yyyy-mm-dd)</string>
+    <string name="hint_kategoria_produktu">Kategoria produktu</string>
+    <string name="hint_opis_produktu">Opis produktu</string>
+    <string name="hint_sklep">Sklep</string>
+
+    <string name="text_zapisz">Zapisz</string>
+    <string name="product_price">Cena: %1$.2f zł</string>
+    <string name="product_expiry">Ważne do: %1$s</string>
+
+    <string name="product_name_label">Nazwa produktu</string>
+    <string name="price_label">Cena: %1$.2f zł</string>
+    <string name="expiry_label">Data ważności: %1$s</string>
+    <string name="category_label">Kategoria: %1$s</string>
+    <string name="description_label">Opis: %1$s</string>
+    <string name="store_label">Sklep: %1$s</string>
+    <string name="purchase_date_label">Data zakupu: %1$s</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
