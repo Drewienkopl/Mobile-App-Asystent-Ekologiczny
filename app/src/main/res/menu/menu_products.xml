@@ -15,4 +15,18 @@
         android:title="@string/tooltip_sort_by_price"
         android:icon="@drawable/ic_sort"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_filter_all"
+        android:title="@string/all_title" />
+
+
+    <item
+        android:id="@+id/action_filter_active"
+        android:title="@string/active_title" />
+
+    <item
+        android:id="@+id/action_filter_used"
+        android:title="@string/used_title" />
+
 </menu>

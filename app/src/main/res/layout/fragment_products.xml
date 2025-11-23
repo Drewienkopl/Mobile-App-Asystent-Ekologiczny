@@ -29,6 +29,74 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:queryHint="Szukaj produktu..." />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginTop="8dp">
+
+            <LinearLayout
+                style="?android:attr/buttonBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="4dp">
+
+                <Button
+                    android:id="@+id/btnExportCSV"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/export_CSV_label"
+                    android:textSize="14sp"
+                    android:ellipsize="none"
+                    android:singleLine="false" />
+
+                <Button
+                    android:id="@+id/btnImportCSV"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/import_CSV_label"
+                    android:textSize="14sp"
+                    android:ellipsize="none"
+                    android:singleLine="false" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="?android:attr/buttonBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnExportJSON"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/export_JSON_label"
+                    android:textSize="14sp"
+                    android:ellipsize="none"
+                    android:singleLine="false" />
+
+                <Button
+                    android:id="@+id/btnImportJSON"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/import_JSON_label"
+                    android:textSize="14sp"
+                    android:ellipsize="none"
+                    android:singleLine="false" />
+            </LinearLayout>
+
+        </LinearLayout>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

@@ -10,10 +10,12 @@ public class Product {
     private String store;
     private String purchaseDate; // format ISO: yyyy-MM-dd
 
+    private boolean used;
+
     public Product() {}
 
     public Product(long id, String name, double price, String expiryDate, String category,
-                   String description, String store, String purchaseDate) {
+                   String description, String store, String purchaseDate, Boolean used) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -22,6 +24,7 @@ public class Product {
         this.description = description;
         this.store = store;
         this.purchaseDate = purchaseDate;
+        this.used = used;
     }
     public long getId(){ return id;}
     public String getName(){ return name;}
@@ -31,6 +34,10 @@ public class Product {
     public String getDescription(){ return description;}
     public String getStore(){ return store;}
     public String getPurchaseDate(){ return purchaseDate;}
+
+    public boolean isUsed() {
+        return used;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -59,5 +66,7 @@ public class Product {
     public void setPurchaseDate(String purchaseDate) {
         this.purchaseDate = purchaseDate;
     }
+
+    public void setUsed(boolean used) { this.used = used; }
 
 }

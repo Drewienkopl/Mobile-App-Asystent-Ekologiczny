@@ -31,6 +31,20 @@
     <string name="description_label">Opis: %1$s</string>
     <string name="store_label">Sklep: %1$s</string>
     <string name="purchase_date_label">Data zakupu: %1$s</string>
+    <string name="duplicate_label">Duplicate</string>
+    <string name="used_label">Status: %1$s</string>
+    <string name="used_label_yes">Zużyty</string>
+    <string name="used_label_no">Aktywny</string>
+
+    <string name="import_CSV_label">Import CSV</string>
+    <string name="export_CSV_label">Eksport CSV</string>
+    <string name="import_JSON_label">Import JSON</string>
+    <string name="export_JSON_label">Eksport JSON</string>
+
+    <string name="all_title">Wszystkie</string>
+    <string name="active_title">Aktywne</string>
+    <string name="used_title">Zużyte</string>
+
 
     <string name="tooltip_sort_by_price">Sort by Price</string>
     <string name="tooltip_switch_to_grid">View</string>

@@ -14,7 +14,7 @@ import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "eco_assistant.db";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
 
 
     public static final String TABLE_PRODUCTS = "products";
@@ -27,6 +27,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String COL_STORE = "store";
     public static final String COL_PURCHASE = "purchase_date";
 
+    public static final String COL_USED = "used";
+
 
     private static final String CREATE_PRODUCTS =
             "CREATE TABLE " + TABLE_PRODUCTS + " (" +
@@ -37,7 +39,8 @@ public class DBHelper extends SQLiteOpenHelper {
                     COL_CATEGORY + " TEXT, " +
                     COL_DESCRIPTION + " TEXT, " +
                     COL_STORE + " TEXT, " +
-                    COL_PURCHASE + " TEXT" +
+                    COL_PURCHASE + " TEXT, " +
+                    COL_USED + " INTEGER DEFAULT 0" +
                     ");";
 
 
@@ -69,6 +72,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(COL_DESCRIPTION, p.getDescription());
         cv.put(COL_STORE, p.getStore());
         cv.put(COL_PURCHASE, p.getPurchaseDate());
+        cv.put(COL_USED, p.isUsed() ? 1 : 0);
         long id = db.insert(TABLE_PRODUCTS, null, cv);
         db.close();
         return id;
@@ -91,9 +95,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 String desc = c.getString(c.getColumnIndexOrThrow(COL_DESCRIPTION));
                 String store = c.getString(c.getColumnIndexOrThrow(COL_STORE));
                 String purchase = c.getString(c.getColumnIndexOrThrow(COL_PURCHASE));
+                boolean used = c.getInt(c.getColumnIndexOrThrow(COL_USED)) == 1;
 
-
-                Product p = new Product(id, name, price, expiry, category, desc, store, purchase);
+                Product p = new Product(id, name, price, expiry, category, desc, store, purchase, used);
                 list.add(p);
             } while (c.moveToNext());
         }
@@ -116,7 +120,8 @@ public class DBHelper extends SQLiteOpenHelper {
             String desc = c.getString(c.getColumnIndexOrThrow(COL_DESCRIPTION));
             String store = c.getString(c.getColumnIndexOrThrow(COL_STORE));
             String purchase = c.getString(c.getColumnIndexOrThrow(COL_PURCHASE));
-            p = new Product(id, name, price, expiry, category, desc, store, purchase);
+            boolean used = c.getInt(c.getColumnIndexOrThrow(COL_USED)) == 1;
+            p = new Product(id, name, price, expiry, category, desc, store, purchase, used);
         }
         c.close();
         db.close();
@@ -135,6 +140,7 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(COL_DESCRIPTION, p.getDescription());
         values.put(COL_STORE, p.getStore());
         values.put(COL_PURCHASE, p.getPurchaseDate());
+        values.put(COL_USED, p.isUsed() ? 1 : 0);
 
         db.update(TABLE_PRODUCTS, values, COL_ID + "=?", new String[]{String.valueOf(p.getId())});
         db.close();

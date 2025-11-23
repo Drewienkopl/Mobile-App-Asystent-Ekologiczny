@@ -1,29 +1,23 @@
 package com.example.lab1.ui.products;
 
 
-
-
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
-
 
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-
-
 import com.example.lab1.R;
+import com.example.lab1.data.DBHelper;
 import com.example.lab1.data.Product;
 import com.google.android.material.color.MaterialColors;
-
-
 
 
 import java.text.ParseException;
@@ -34,18 +28,12 @@ import java.util.List;
 import java.util.Locale;
 
 
-
-
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ProductViewHolder> {
-
-
 
 
     private List<Product> productList;
     private List<Product> originalList;
     private final OnProductActionListener listener;
-
-
 
 
     public interface OnProductActionListener {
@@ -55,15 +43,11 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
     }
 
 
-
-
     public ProductsAdapter(List<Product> productList, OnProductActionListener listener) {
         this.productList = productList;
         this.originalList = new ArrayList<>(productList);
         this.listener = listener;
     }
-
-
 
 
     public void updateData(List<Product> newList) {
@@ -101,13 +85,9 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
     }
 
 
-
-
     public List<Product> getProductList() {
         return productList;
     }
-
-
 
 
     @Override
@@ -116,13 +96,9 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         int normalBg = MaterialColors.getColor(holder.itemView, com.google.android.material.R.attr.colorSurface);
 
 
-
-
         // fade-in animation
         holder.itemView.setAlpha(0f);
         holder.itemView.animate().alpha(1f).setDuration(500).start();
-
-
 
 
         holder.textName.setText(product.getName() != null ? product.getName() : "");
@@ -135,6 +111,11 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         );
 
 
+        if (product.isUsed()) {
+            holder.itemView.setAlpha(0.4f);
+        } else {
+            holder.itemView.setAlpha(1f);
+        }
 
 
         // Podswietlenie produktow po terminie
@@ -156,24 +137,18 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         }
 
 
-
-
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onProductClick(product);
         });
         holder.btnEdit.setOnClickListener(v -> {
             if (listener != null) listener.onEditProduct(product);
         });
-
-
         holder.btnDelete.setOnClickListener(v -> {
             if (listener != null) listener.onDeleteProduct(product);
         });
 
 
     }
-
-
 
 
     @Override
@@ -185,8 +160,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
         TextView textName, textCategory, textPrice, textExpiry;
         ImageButton btnEdit, btnDelete;
-
-
+        CheckBox cbUsed;
 
 
         public ProductViewHolder(@NonNull View itemView) {
@@ -197,6 +171,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
             textExpiry = itemView.findViewById(R.id.textExpiry);
             btnEdit = itemView.findViewById(R.id.btnEdit);
             btnDelete = itemView.findViewById(R.id.btnDelete);
+            cbUsed = itemView.findViewById(R.id.cbUsed);
         }
     }
 }

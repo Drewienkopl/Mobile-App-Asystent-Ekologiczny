@@ -28,6 +28,14 @@ import com.example.lab1.data.Product;
 import com.example.lab1.databinding.FragmentProductsBinding;
 
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +57,12 @@ public class ProductsFragment extends Fragment {
 
         binding = FragmentProductsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+
+        binding.btnExportCSV.setOnClickListener(v -> exportToCSV());
+        binding.btnImportCSV.setOnClickListener(v -> importFromCSV());
+        binding.btnExportJSON.setOnClickListener(v -> exportToJSON());
+        binding.btnImportJSON.setOnClickListener(v -> importFromJSON());
 
 
         dbHelper = new DBHelper(requireContext());
@@ -147,6 +161,26 @@ public class ProductsFragment extends Fragment {
                 } else if (item.getItemId() == R.id.action_toggle_layout) {
                     toggleLayoutManager();
                     return true;
+                } else if (item.getItemId() == R.id.action_filter_all) {
+                    adapter.updateData(dbHelper.getAllProducts());
+                    updateProductCount();
+                    return true;
+                } else if (item.getItemId() == R.id.action_filter_active) {
+                    List<Product> active = new ArrayList<>();
+                    for (Product p : dbHelper.getAllProducts()) {
+                        if (!p.isUsed()) active.add(p);
+                    }
+                    adapter.updateData(active);
+                    updateProductCount();
+                    return true;
+                } else if (item.getItemId() == R.id.action_filter_used) {
+                    List<Product> used = new ArrayList<>();
+                    for (Product p : dbHelper.getAllProducts()) {
+                        if (p.isUsed()) used.add(p);
+                    }
+                    adapter.updateData(used);
+                    updateProductCount();
+                    return true;
                 }
                 return false;
             }
@@ -209,5 +243,145 @@ public class ProductsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void exportToCSV() {
+        DBHelper db = new DBHelper(requireContext());
+        List<Product> products = db.getAllProducts();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("id,name,price,expiry,category,description,store,purchase,used\n");
+
+        for(Product p : products) {
+            sb.append(p.getId()).append(",");
+            sb.append(p.getName()).append(",");
+            sb.append(p.getPrice()).append(",");
+            sb.append(p.getExpiryDate()).append(",");
+            sb.append(p.getCategory()).append(",");
+            sb.append(p.getDescription()).append(",");
+            sb.append(p.getStore()).append(",");
+            sb.append(p.getPurchaseDate()).append(",");
+            sb.append(p.isUsed() ? "1" : "0").append("\n");
+        }
+        try {
+            File file = new File(requireContext().getExternalFilesDir(null), "products.csv");
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(sb.toString().getBytes());
+            fos.close();
+
+            Toast.makeText(requireContext(), "Zapisano do: " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(requireContext(), "Błąd zapisu CSV!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void importFromCSV() {
+        DBHelper db = new DBHelper(requireContext());
+
+        try {
+            File file = new File(requireContext().getExternalFilesDir(null), "products.csv");
+            BufferedReader br = new BufferedReader(new FileReader(file));
+
+            String line;
+            br.readLine();
+
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+
+                Product p = new Product();
+                p.setName(values[1]);
+                p.setPrice(Double.parseDouble(values[2]));
+                p.setExpiryDate(values[3]);
+                p.setCategory(values[4]);
+                p.setDescription(values[5]);
+                p.setStore(values[6]);
+                p.setPurchaseDate(values[7]);
+                p.setUsed(values[8].equals("1"));
+
+                db.insertProduct(p);
+            }
+
+            br.close();
+            loadProductsFromDb();
+            Toast.makeText(requireContext(), "Zaimportowano CSV!", Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(requireContext(), "Błąd importu CSV!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void exportToJSON() {
+        DBHelper db = new DBHelper(requireContext());
+        List<Product> products = db.getAllProducts();
+
+        JSONArray array = new JSONArray();
+
+        try {
+            for (Product p : products) {
+                JSONObject obj = new JSONObject();
+                obj.put("name", p.getName());
+                obj.put("price", p.getPrice());
+                obj.put("expiry", p.getExpiryDate());
+                obj.put("category", p.getCategory());
+                obj.put("description", p.getDescription());
+                obj.put("store", p.getStore());
+                obj.put("purchase", p.getPurchaseDate());
+                obj.put("used", p.isUsed());
+
+                array.put(obj);
+            }
+            File file = new File(requireContext().getExternalFilesDir(null), "products.json");
+            FileWriter writer = new FileWriter(file);
+            writer.write(array.toString(2));
+            writer.close();
+
+            Toast.makeText(requireContext(), "JSON zapisany: " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(requireContext(), "Błąd zapisu JSON!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void importFromJSON() {
+        DBHelper db = new DBHelper(requireContext());
+
+        try {
+            File file = new File(requireContext().getExternalFilesDir(null), "products.json");
+            FileReader reader = new FileReader(file);
+
+            StringBuilder sb = new StringBuilder();
+            int c;
+            while ((c = reader.read()) != -1) {
+                sb.append((char) c);
+            }
+            reader.close();
+
+            JSONArray array = new JSONArray(sb.toString());
+
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject obj = array.getJSONObject(i);
+
+                Product p = new Product();
+                p.setName(obj.getString("name"));
+                p.setPrice(obj.getDouble("price"));
+                p.setExpiryDate(obj.getString("expiry"));
+                p.setCategory(obj.getString("category"));
+                p.setDescription(obj.getString("description"));
+                p.setStore(obj.getString("store"));
+                p.setPurchaseDate(obj.getString("purchase"));
+                p.setUsed(obj.getBoolean("used"));
+
+                db.insertProduct(p);
+            }
+
+            loadProductsFromDb();
+            Toast.makeText(requireContext(), "Zaimportowano JSON!", Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(requireContext(), "Błąd importu JSON!", Toast.LENGTH_SHORT).show();
+        }
     }
 }

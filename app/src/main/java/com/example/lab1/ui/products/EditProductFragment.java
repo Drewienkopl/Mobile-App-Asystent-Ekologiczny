@@ -4,6 +4,7 @@ package com.example.lab1.ui.products;
 
 
 import android.app.DatePickerDialog;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 
+import com.example.lab1.R;
 import com.example.lab1.data.DBHelper;
 import com.example.lab1.data.Product;
 import com.example.lab1.databinding.FragmentAddProductBinding;
@@ -81,6 +83,7 @@ public class EditProductFragment extends Fragment {
         binding.etDescription.setText(p.getDescription());
         binding.etStore.setText(p.getStore());
         binding.etPurchase.setText(p.getPurchaseDate());
+        binding.cbUsed.setChecked(p.isUsed());
     }
 
     private void pickDate(TextInputEditText target) {
@@ -115,10 +118,18 @@ public class EditProductFragment extends Fragment {
         product.setDescription(binding.etDescription.getText().toString());
         product.setStore(binding.etStore.getText().toString());
         product.setPurchaseDate(binding.etPurchase.getText().toString());
+        product.setUsed(binding.cbUsed.isChecked());
 
 
         dbHelper.updateProduct(product);
+        playConfirmSound();
         Toast.makeText(getContext(), "Zaktualizowano produkt", Toast.LENGTH_SHORT).show();
         Navigation.findNavController(requireView()).popBackStack();
+    }
+
+    private void playConfirmSound() {
+        MediaPlayer mp = MediaPlayer.create(requireContext(), R.raw.confirm_lightsaber);
+        mp.setOnCompletionListener(MediaPlayer::release);
+        mp.start();
     }
 }

@@ -2,6 +2,7 @@ package com.example.lab1.ui.products;
 
 
 import android.app.DatePickerDialog;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.lab1.R;
 import com.example.lab1.data.DBHelper;
 import com.example.lab1.ui.products.EditProductFragment;
 import com.example.lab1.data.Product;
@@ -87,10 +89,11 @@ public class AddProductFragment extends Fragment {
         p.setDescription(desc);
         p.setStore(store);
         p.setPurchaseDate(purchase);
-
+        p.setUsed(binding.cbUsed.isChecked());
 
         long id = dbHelper.insertProduct(p);
         if (id > 0) {
+            playConfirmSound();
             Toast.makeText(requireContext(), "Produkt zapisany", Toast.LENGTH_SHORT).show();
             // wróć na listę produktów
             NavHostFragment.findNavController(AddProductFragment.this).popBackStack();
@@ -103,5 +106,11 @@ public class AddProductFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void playConfirmSound() {
+        MediaPlayer mp = MediaPlayer.create(requireContext(), R.raw.confirm_lightsaber);
+        mp.setOnCompletionListener(MediaPlayer::release);
+        mp.start();
     }
 }
