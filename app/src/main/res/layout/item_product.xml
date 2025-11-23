@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="12dp">
+        android:padding="12dp"
+        >
 
         <ImageView
             android:id="@+id/ivCategoryIcon"
@@ -20,13 +21,14 @@
             android:layout_height="40dp"
             android:layout_marginEnd="12dp"
             android:contentDescription="@string/menu_products"
-            android:src="@drawable/ic_category_default" />
-
+            android:src="@drawable/ic_category_default"
+            />
         <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
             <TextView
                 android:id="@+id/textName"
@@ -37,14 +39,16 @@
                 android:textStyle="bold"
                 android:textSize="18sp" />
 
+
             <TextView
                 android:id="@+id/textCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
                 android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:textColor="?attr/colorOnSurface"
-                android:textSize="16sp"
-                android:layout_marginBottom="2dp"/>
+                android:textSize="16sp" />
+
 
             <TextView
                 android:id="@+id/textPrice"
@@ -55,6 +59,7 @@
                 android:textSize="14sp"
                 android:layout_marginBottom="2dp"/>
 
+
             <TextView
                 android:id="@+id/textExpiry"
                 android:layout_width="match_parent"
@@ -63,6 +68,36 @@
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="14sp"
                 android:layout_marginBottom="2dp"/>
+
+
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+
+
+            <ImageButton
+                android:id="@+id/btnEdit"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/edit_label"
+                android:src="@drawable/ic_edit"
+                app:tint="?attr/colorPrimary" />
+
+
+            <ImageButton
+                android:id="@+id/btnDelete"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/delete_label"
+                android:src="@drawable/ic_delete"
+                app:tint="@android:color/holo_red_dark" />
+        </LinearLayout>
+
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

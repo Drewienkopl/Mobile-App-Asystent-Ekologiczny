@@ -13,13 +13,16 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.lab1.data.DBHelper;
+import com.example.lab1.ui.products.EditProductFragment;
 import com.example.lab1.data.Product;
 import com.example.lab1.databinding.FragmentAddProductBinding;
+import com.example.lab1.utils.FormValidator;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Objects;
 
 
 public class AddProductFragment extends Fragment {
@@ -38,6 +41,7 @@ public class AddProductFragment extends Fragment {
         dbHelper = new DBHelper(requireContext());
 
         binding.etExpiry.setOnClickListener(v -> showDatePicker(binding.etExpiry));
+        binding.etPurchase.setOnClickListener(v -> showDatePicker(binding.etPurchase));
         binding.btnSave.setOnClickListener(v -> saveProduct());
 
         return binding.getRoot();
@@ -55,33 +59,25 @@ public class AddProductFragment extends Fragment {
     }
 
     private void saveProduct() {
-        String name = binding.etName.getText() == null ? "" : binding.etName.getText().toString().trim();
-        String priceStr = binding.etPrice.getText() == null ? "" : binding.etPrice.getText().toString().trim();
-        String expiry = binding.etExpiry.getText() == null ? "" : binding.etExpiry.getText().toString().trim();
-        String category = binding.etCategory.getText() == null ? "" : binding.etCategory.getText().toString().trim();
-        String desc = binding.etDescription.getText() == null ? "" : binding.etDescription.getText().toString().trim();
-        String store = binding.etStore.getText() == null ? "" : binding.etStore.getText().toString().trim();
 
-        // Walidacja
-        if (name.isEmpty()) {
-            binding.tilName.setError("Podaj nazwę");
-            return;
-        } else {
-            binding.tilName.setError(null);
-        }
+        if (!FormValidator.validateProductForm(
+                requireContext(),
+                binding.etName,
+                binding.etPrice,
+                binding.etExpiry,
+                binding.etCategory,
+                binding.etDescription,
+                binding.etStore,
+                binding.etPurchase
+        )) return;
 
-        double price = 0;
-        try {
-            price = Double.parseDouble(priceStr);
-            if (price < 0) throw new NumberFormatException();
-        } catch (NumberFormatException e) {
-            binding.etPrice.setError("Niepoprawna cena");
-        }
-
-        // expiry format check
-        if (!expiry.isEmpty() && expiry.length() != 10) {
-            binding.etExpiry.setError("Wprowadź datę w formacie yyyy-MM-dd");
-        }
+        String name = Objects.requireNonNull(binding.etName.getText()).toString().trim();
+        double price = Double.parseDouble(Objects.requireNonNull(binding.etPrice.getText()).toString().trim());
+        String expiry = Objects.requireNonNull(binding.etExpiry.getText()).toString().trim();
+        String category = Objects.requireNonNull(binding.etCategory.getText()).toString().trim();
+        String desc = Objects.requireNonNull(binding.etDescription.getText()).toString().trim();
+        String store = Objects.requireNonNull(binding.etStore.getText()).toString().trim();
+        String purchase = Objects.requireNonNull(binding.etPurchase.getText()).toString().trim();
 
         Product p = new Product();
         p.setName(name);
@@ -90,7 +86,7 @@ public class AddProductFragment extends Fragment {
         p.setCategory(category);
         p.setDescription(desc);
         p.setStore(store);
-        p.setPurchaseDate("");
+        p.setPurchaseDate(purchase);
 
 
         long id = dbHelper.insertProduct(p);

@@ -1,17 +1,21 @@
 package com.example.lab1.data;
 
+
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "eco_assistant.db";
     private static final int DB_VERSION = 1;
+
 
     public static final String TABLE_PRODUCTS = "products";
     public static final String COL_ID = "id";
@@ -22,6 +26,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String COL_DESCRIPTION = "description";
     public static final String COL_STORE = "store";
     public static final String COL_PURCHASE = "purchase_date";
+
 
     private static final String CREATE_PRODUCTS =
             "CREATE TABLE " + TABLE_PRODUCTS + " (" +
@@ -35,20 +40,24 @@ public class DBHelper extends SQLiteOpenHelper {
                     COL_PURCHASE + " TEXT" +
                     ");";
 
+
     public DBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
+
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_PRODUCTS);
     }
 
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVer, int newVer) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCTS);
         onCreate(db);
     }
+
 
     public long insertProduct(Product p) {
         SQLiteDatabase db = getWritableDatabase();
@@ -65,10 +74,12 @@ public class DBHelper extends SQLiteOpenHelper {
         return id;
     }
 
+
     public List<Product> getAllProducts() {
         List<Product> list = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.query(TABLE_PRODUCTS, null, null, null, null, null, COL_EXPIRY + " ASC");
+
 
         if (c.moveToFirst()) {
             do {
@@ -81,6 +92,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 String store = c.getString(c.getColumnIndexOrThrow(COL_STORE));
                 String purchase = c.getString(c.getColumnIndexOrThrow(COL_PURCHASE));
 
+
                 Product p = new Product(id, name, price, expiry, category, desc, store, purchase);
                 list.add(p);
             } while (c.moveToNext());
@@ -89,6 +101,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
         return list;
     }
+
 
     public Product getProductById(long id) {
         SQLiteDatabase db = getReadableDatabase();
@@ -109,4 +122,30 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
         return p;
     }
+
+
+    public void updateProduct(Product p) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(COL_NAME, p.getName());
+        values.put(COL_PRICE, p.getPrice());
+        values.put(COL_EXPIRY, p.getExpiryDate());
+        values.put(COL_CATEGORY, p.getCategory());
+        values.put(COL_DESCRIPTION, p.getDescription());
+        values.put(COL_STORE, p.getStore());
+        values.put(COL_PURCHASE, p.getPurchaseDate());
+
+        db.update(TABLE_PRODUCTS, values, COL_ID + "=?", new String[]{String.valueOf(p.getId())});
+        db.close();
+    }
+
+
+    public void deleteProduct(long id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("products", "id = ?", new String[]{String.valueOf(id)});
+        db.close();
+    }
+
+
 }

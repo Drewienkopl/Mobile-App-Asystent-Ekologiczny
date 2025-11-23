@@ -1,8 +1,7 @@
 package com.example.lab1.ui.products;
 
 
-
-
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -46,23 +46,44 @@ public class ProductsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
+
         binding = FragmentProductsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+
         dbHelper = new DBHelper(requireContext());
+
 
         RecyclerView recyclerView = binding.recyclerViewProducts;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-
-        // adapter z pusta lista na start
-        adapter = new ProductsAdapter(new ArrayList<>(), product -> {
-            Bundle args = new Bundle();
-            args.putLong("productId", product.getId());
-            Navigation.findNavController(requireView()).navigate(R.id.action_products_to_productDetails, args);
-        });
         recyclerView.setAdapter(adapter);
 
+        // adapter z pusta lista na start
+        adapter = new ProductsAdapter(new ArrayList<>(), new ProductsAdapter.OnProductActionListener() {
+            @Override
+            public void onProductClick(Product product) {
+                Bundle args = new Bundle();
+                args.putLong("productId", product.getId());
+                Navigation.findNavController(requireView())
+                        .navigate(R.id.action_products_to_productDetails, args);
+            }
+
+            @Override
+            public void onEditProduct(Product product) {
+                Bundle args = new Bundle();
+                args.putLong("productId", product.getId());
+                Navigation.findNavController(requireView())
+                        .navigate(R.id.action_products_to_editProduct, args);
+            }
+
+            @Override
+            public void onDeleteProduct(Product product) {
+                showDeleteDialog(product);
+            }
+        });
+
+        recyclerView.setAdapter(adapter);
 
         // navigation do AddProductFragment
         binding.fabAddProduct.setOnClickListener(
@@ -72,7 +93,6 @@ public class ProductsFragment extends Fragment {
         // wczytujemy produkty
         loadProductsFromDb();
 
-
         return root;
     }
 
@@ -80,6 +100,7 @@ public class ProductsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
 
         //Setup SearchView
         androidx.appcompat.widget.SearchView searchView = binding.searchView;
@@ -93,6 +114,7 @@ public class ProductsFragment extends Fragment {
                 return true;
             }
 
+
             @Override
             public boolean onQueryTextChange(String newText) {
                 adapter.filter(newText);
@@ -101,12 +123,14 @@ public class ProductsFragment extends Fragment {
             }
         });
 
+
         //Setup MenuProvider for menu items
         requireActivity().addMenuProvider(new MenuProvider() {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
                 inflater.inflate(R.menu.menu_products, menu);
             }
+
 
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem item) {
@@ -129,6 +153,7 @@ public class ProductsFragment extends Fragment {
         }, getViewLifecycleOwner());
     }
 
+
     private void toggleLayoutManager() {
         isGrid = !isGrid;
         RecyclerView recyclerView = binding.recyclerViewProducts;
@@ -140,10 +165,12 @@ public class ProductsFragment extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
+
     private void updateProductCount() {
         int count = adapter.getProductList().size();
         binding.tvProductCount.setText(getString(R.string.products_count, count));
     }
+
 
     // odswiez liste za kazdym razem gdy fragment wraca na pierwszy plan
     @Override
@@ -152,13 +179,29 @@ public class ProductsFragment extends Fragment {
         loadProductsFromDb();
     }
 
+
     private void loadProductsFromDb() {
         List<Product> products = dbHelper.getAllProducts();
         if (products == null) products = new ArrayList<>();
         adapter.updateData(products);
 
+
         //aktualizuj licznik produktow
         binding.tvProductCount.setText(getString(R.string.products_count, products.size()));
+    }
+
+
+    private void showDeleteDialog(Product product) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Usuń produkt")
+                .setMessage("Czy na pewno chcesz usunąć " + product.getName() + "?")
+                .setPositiveButton("Usuń", (dialog, which) -> {
+                    dbHelper.deleteProduct(product.getId());
+                    loadProductsFromDb(); // automatyczne odświeżenie
+                    Toast.makeText(getContext(), "Produkt usunięty", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Anuluj", null)
+                .show();
     }
 
 

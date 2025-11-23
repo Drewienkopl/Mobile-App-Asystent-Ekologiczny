@@ -18,6 +18,7 @@
     <string name="hint_kategoria_produktu">Kategoria produktu</string>
     <string name="hint_opis_produktu">Opis produktu</string>
     <string name="hint_sklep">Sklep</string>
+    <string name="hint_purchase_date">Data zakupu</string>
 
     <string name="text_zapisz">Zapisz</string>
     <string name="product_price">Cena: %1$.2f zł</string>
@@ -36,6 +37,9 @@
     <string name="tooltip_add_product">Add Product</string>
 
     <string name="products_count">Products: %1$d</string>
+
+    <string name="edit_label">Edytuj produkt</string>
+    <string name="delete_label">Usuń produkt</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
