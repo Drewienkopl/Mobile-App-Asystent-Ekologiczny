@@ -14,7 +14,7 @@ import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "eco_assistant.db";
-    private static final int DB_VERSION = 2;
+    private static final int DB_VERSION = 3;
 
 
     public static final String TABLE_PRODUCTS = "products";
@@ -29,6 +29,20 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static final String COL_USED = "used";
 
+    public static final String TABLE_DEPOSITS = "deposits";
+    public static final String COL_D_TYPE = "type";
+    public static final String COL_D_VALUE = "value";
+    public static final String COL_D_BARCODE = "barcode";
+    public static final String COL_D_RETURNED = "returned";
+
+    private static final String CREATE_DEPOSITS =
+            "CREATE TABLE " + TABLE_DEPOSITS + " (" +
+                    COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COL_D_TYPE + " TEXT NOT NULL, " +
+                    COL_D_VALUE + " REAL NOT NULL, " +
+                    COL_D_BARCODE + " TEXT, " +
+                    COL_D_RETURNED + " INTEGER DEFAULT 0" +
+                    ");";
 
     private static final String CREATE_PRODUCTS =
             "CREATE TABLE " + TABLE_PRODUCTS + " (" +
@@ -52,12 +66,14 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_PRODUCTS);
+        db.execSQL(CREATE_DEPOSITS);
     }
 
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVer, int newVer) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCTS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_DEPOSITS);
         onCreate(db);
     }
 
@@ -73,7 +89,21 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(COL_STORE, p.getStore());
         cv.put(COL_PURCHASE, p.getPurchaseDate());
         cv.put(COL_USED, p.isUsed() ? 1 : 0);
+
         long id = db.insert(TABLE_PRODUCTS, null, cv);
+        db.close();
+        return id;
+    }
+
+    public long insertDeposit(Deposit d) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COL_D_TYPE, d.getType());
+        cv.put(COL_D_VALUE, d.getValue());
+        cv.put(COL_D_BARCODE, d.getBarcode());
+        cv.put(COL_D_RETURNED, d.isReturned() ? 1 : 0);
+
+        long id = db.insert(TABLE_DEPOSITS, null, cv);
         db.close();
         return id;
     }
@@ -106,12 +136,34 @@ public class DBHelper extends SQLiteOpenHelper {
         return list;
     }
 
+    public List<Deposit> getAllDeposits() {
+        List<Deposit> list = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.query(TABLE_DEPOSITS, null, null, null, null, null, COL_ID + " DESC");
+
+        if (c.moveToFirst()) {
+            do {
+                long id = c.getLong(c.getColumnIndexOrThrow(COL_ID));
+                String type = c.getString(c.getColumnIndexOrThrow(COL_D_TYPE));
+                double value = c.getDouble(c.getColumnIndexOrThrow(COL_D_VALUE));
+                String barcode = c.getString(c.getColumnIndexOrThrow(COL_D_BARCODE));
+                boolean returned = c.getInt(c.getColumnIndexOrThrow(COL_D_RETURNED)) == 1;
+
+                Deposit d = new Deposit(id, type, value, barcode, returned);
+                list.add(d);
+            } while (c.moveToNext());
+        }
+        c.close();
+        db.close();
+        return list;
+    }
 
     public Product getProductById(long id) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.query(TABLE_PRODUCTS, null, COL_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null);
         Product p = null;
+
         if (c.moveToFirst()) {
             String name = c.getString(c.getColumnIndexOrThrow(COL_NAME));
             double price = c.getDouble(c.getColumnIndexOrThrow(COL_PRICE));
@@ -128,6 +180,24 @@ public class DBHelper extends SQLiteOpenHelper {
         return p;
     }
 
+    public Deposit getDepositById(long id) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.query(TABLE_DEPOSITS, null, COL_ID + "=?",
+                new String[]{String.valueOf(id)}, null, null, null);
+        Deposit d = null;
+
+        if (c.moveToFirst()) {
+            String type = c.getString(c.getColumnIndexOrThrow(COL_D_TYPE));
+            double value = c.getDouble(c.getColumnIndexOrThrow(COL_D_VALUE));
+            String barcode = c.getString(c.getColumnIndexOrThrow(COL_D_BARCODE));
+            boolean returned = c.getInt(c.getColumnIndexOrThrow(COL_D_RETURNED)) == 1;
+
+            d = new Deposit(id, type, value, barcode, returned);
+        }
+        c.close();
+        db.close();
+        return d;
+    }
 
     public void updateProduct(Product p) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -146,10 +216,28 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void updateDeposit(Deposit d) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(COL_D_TYPE, d.getType());
+        values.put(COL_D_VALUE, d.getValue());
+        values.put(COL_D_BARCODE, d.getBarcode());
+        values.put(COL_D_RETURNED, d.isReturned()? 1 : 0) ;
+
+        db.update(TABLE_DEPOSITS, values, COL_ID + "=?", new String[]{String.valueOf(d.getId())});
+        db.close();
+    }
 
     public void deleteProduct(long id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete("products", "id = ?", new String[]{String.valueOf(id)});
+        db.close();
+    }
+
+    public void deleteDeposit(long id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("deposits", "id = ?", new String[]{String.valueOf(id)});
         db.close();
     }
 

@@ -19,6 +19,7 @@ import com.example.lab1.ui.products.EditProductFragment;
 import com.example.lab1.data.Product;
 import com.example.lab1.databinding.FragmentAddProductBinding;
 import com.example.lab1.utils.FormValidator;
+import com.example.lab1.utils.SoundUtil;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
@@ -93,7 +94,7 @@ public class AddProductFragment extends Fragment {
 
         long id = dbHelper.insertProduct(p);
         if (id > 0) {
-            playConfirmSound();
+            SoundUtil.playConfirmSound(requireContext());
             Toast.makeText(requireContext(), "Produkt zapisany", Toast.LENGTH_SHORT).show();
             // wróć na listę produktów
             NavHostFragment.findNavController(AddProductFragment.this).popBackStack();
@@ -108,9 +109,4 @@ public class AddProductFragment extends Fragment {
         binding = null;
     }
 
-    private void playConfirmSound() {
-        MediaPlayer mp = MediaPlayer.create(requireContext(), R.raw.confirm_lightsaber);
-        mp.setOnCompletionListener(MediaPlayer::release);
-        mp.start();
-    }
 }

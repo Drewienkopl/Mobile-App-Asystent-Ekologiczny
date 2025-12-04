@@ -24,6 +24,7 @@ import com.example.lab1.data.DBHelper;
 import com.example.lab1.data.Product;
 import com.example.lab1.databinding.FragmentAddProductBinding;
 import com.example.lab1.utils.FormValidator;
+import com.example.lab1.utils.SoundUtil;
 import com.google.android.material.textfield.TextInputEditText;
 
 
@@ -122,14 +123,9 @@ public class EditProductFragment extends Fragment {
 
 
         dbHelper.updateProduct(product);
-        playConfirmSound();
+        SoundUtil.playConfirmSound(requireContext());
+
         Toast.makeText(getContext(), "Zaktualizowano produkt", Toast.LENGTH_SHORT).show();
         Navigation.findNavController(requireView()).popBackStack();
-    }
-
-    private void playConfirmSound() {
-        MediaPlayer mp = MediaPlayer.create(requireContext(), R.raw.confirm_lightsaber);
-        mp.setOnCompletionListener(MediaPlayer::release);
-        mp.start();
     }
 }

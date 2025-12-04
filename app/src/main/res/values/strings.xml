@@ -54,6 +54,14 @@
 
     <string name="edit_label">Edytuj produkt</string>
     <string name="delete_label">Usuń produkt</string>
+
+    <string-array name="deposit_types">
+        <item>Butelka plastikowa</item>
+        <item>Butelka szklana</item>
+        <item>Puszka aluminiowa</item>
+        <item>Słoik</item>
+        <item>Karton</item>
+    </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

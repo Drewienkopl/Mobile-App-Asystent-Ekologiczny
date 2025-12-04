@@ -9,7 +9,12 @@
         android:id="@+id/nav_deposit"
         android:name="com.example.lab1.ui.deposit.DepositFragment"
         android:label="@string/menu_deposit"
-        tools:layout="@layout/fragment_deposit" />
+        tools:layout="@layout/fragment_deposit">
+
+        <action
+            android:id="@+id/action_deposit_to_addDeposit"
+            app:destination="@id/addDepositFragment"/>
+    </fragment>
 
     <fragment
         android:id="@+id/nav_products"
@@ -42,6 +47,12 @@
         android:name="com.example.lab1.ui.products.EditProductFragment"
         android:label="Edytuj produkt"
         tools:layout="@layout/fragment_add_product" />
+
+    <fragment
+        android:id="@+id/addDepositFragment"
+        android:name="com.example.lab1.ui.deposit.AddDepositFragment"
+        android:label="Dodaj opakowanie"
+        tools:layout="@layout/fragment_add_deposit" />
 
     <fragment
         android:id="@+id/nav_reports"
