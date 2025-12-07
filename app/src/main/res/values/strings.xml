@@ -49,6 +49,7 @@
     <string name="tooltip_sort_by_price">Sort by Price</string>
     <string name="tooltip_switch_to_grid">View</string>
     <string name="tooltip_add_product">Add Product</string>
+    <string name="tooltip_filter_by_value">Filter by Value</string>
 
     <string name="products_count">Products: %1$d</string>
 

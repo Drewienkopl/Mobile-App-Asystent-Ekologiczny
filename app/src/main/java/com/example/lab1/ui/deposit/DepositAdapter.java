@@ -5,11 +5,15 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -45,6 +49,22 @@ public class DepositAdapter extends RecyclerView.Adapter<DepositAdapter.ViewHold
         notifyDataSetChanged();
     }
 
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        CardView cardDeposit;
+        TextView tvType, tvValue, tvBarcode;
+        ImageButton btnEdit, btnDelete;
+
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            cardDeposit = itemView.findViewById(R.id.cardDeposit);
+            tvType = itemView.findViewById(R.id.tvType);
+            tvValue = itemView.findViewById(R.id.tvValue);
+            tvBarcode = itemView.findViewById(R.id.tvBarcode);
+            btnEdit = itemView.findViewById(R.id.btnEdit);
+            btnDelete = itemView.findViewById(R.id.btnDelete);
+        }
+    }
 
     @NonNull
     @Override
@@ -62,6 +82,25 @@ public class DepositAdapter extends RecyclerView.Adapter<DepositAdapter.ViewHold
         holder.tvBarcode.setText(d.getBarcode() != null ? "Kod: " + d.getBarcode() : "");
 
 
+        //Ustawiwenie koloru tla
+        if (d.isReturned()) {
+            int backgroundColor = ContextCompat.getColor(context, R.color.deposit_returned_bg);
+            int textColor = ContextCompat.getColor(context, R.color.deposit_returned_text);
+            holder.cardDeposit.setCardBackgroundColor(backgroundColor);
+            holder.tvType.setTextColor(textColor);
+            holder.tvValue.setTextColor(textColor);
+            holder.tvBarcode.setTextColor(textColor);
+            holder.itemView.setAlpha(0.95f);
+        } else {
+            int defaultBackgroundColor = ContextCompat.getColor(context, com.google.android.material.R.color.design_default_color_background);
+            int defaultTextColor = ContextCompat.getColor(context, com.google.android.material.R.color.design_default_color_on_background);
+            holder.cardDeposit.setCardBackgroundColor(defaultBackgroundColor);
+            holder.tvType.setTextColor(defaultTextColor);
+            holder.tvValue.setTextColor(defaultTextColor);
+            holder.tvBarcode.setTextColor(defaultTextColor);
+            holder.itemView.setAlpha(1.0f);
+        }
+
         holder.btnEdit.setOnClickListener(v -> {
             if (listener != null) listener.onEditDeposit(d);
         });
@@ -71,6 +110,9 @@ public class DepositAdapter extends RecyclerView.Adapter<DepositAdapter.ViewHold
             if (listener != null) listener.onDeleteDeposit(d);
         });
 
+        //uruchomienie animacji slide-in
+        Animation animation = AnimationUtils.loadAnimation(context, R.anim.slide_in_bottom);
+        holder.itemView.startAnimation(animation);
 
     }
 
@@ -78,22 +120,6 @@ public class DepositAdapter extends RecyclerView.Adapter<DepositAdapter.ViewHold
     @Override
     public int getItemCount() {
         return deposits.size();
-    }
-
-
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvType, tvValue, tvBarcode;
-        ImageButton btnEdit, btnDelete;
-
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            tvType = itemView.findViewById(R.id.tvType);
-            tvValue = itemView.findViewById(R.id.tvValue);
-            tvBarcode = itemView.findViewById(R.id.tvBarcode);
-            btnEdit = itemView.findViewById(R.id.btnEdit);
-            btnDelete = itemView.findViewById(R.id.btnDelete);
-        }
     }
 }
 

@@ -1,5 +1,6 @@
 package com.example.lab1.ui.deposit;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 
@@ -20,8 +21,12 @@ import com.example.lab1.R;
 import com.example.lab1.data.DBHelper;
 import com.example.lab1.data.Deposit;
 import com.example.lab1.databinding.FragmentAddDepositBinding;
+import com.example.lab1.utils.SoundUtil;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.Objects;
 
@@ -44,9 +49,6 @@ public class AddDepositFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentAddDepositBinding.inflate(inflater, container, false);
 
-
-
-
         return binding.getRoot();
     }
 
@@ -62,6 +64,9 @@ public class AddDepositFragment extends Fragment {
 
 
         binding.btnSaveDeposit.setOnClickListener(v -> saveDeposit());
+        binding.btnScan.setOnClickListener(v -> {
+            IntentIntegrator.forSupportFragment(this).setBeepEnabled(true).setPrompt("Skanuj kod kreskowy").initiateScan();
+        });
 
 
         long depositId = getArguments() != null ? getArguments().getLong("depositId", -1) : -1;
@@ -125,7 +130,7 @@ public class AddDepositFragment extends Fragment {
 
         long id = dbHelper.insertDeposit(d);
         if (id > 0) {
-            playConfirmSound();
+            SoundUtil.playConfirmSound(requireContext());
             Toast.makeText(requireContext(), "Kaucja zapisana", Toast.LENGTH_SHORT).show();
             // wróć na listę depositow
             NavHostFragment.findNavController(AddDepositFragment.this).popBackStack();
@@ -169,19 +174,10 @@ public class AddDepositFragment extends Fragment {
         dbHelper.updateDeposit(d);
 
 
-        playConfirmSound();
+        SoundUtil.playConfirmSound(requireContext());
         Toast.makeText(requireContext(), "Zaktualizowano opakowanie", Toast.LENGTH_SHORT).show();
         NavHostFragment.findNavController(AddDepositFragment.this).popBackStack();
     }
-
-
-    private void playConfirmSound() {
-        MediaPlayer mp = MediaPlayer.create(requireContext(), R.raw.confirm_lightsaber);
-        mp.setOnCompletionListener(MediaPlayer::release);
-        mp.start();
-    }
-
-
 
 
     @Override
@@ -197,4 +193,20 @@ public class AddDepositFragment extends Fragment {
         etBarcode.setText(d.getBarcode());
         binding.switchReturned.setChecked(d.isReturned());
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+
+        if (result != null) {
+            if (result.getContents() != null) {
+                binding.etBarcode.setText(result.getContents());
+            } else {
+                Toast.makeText(requireContext(), "Anulowano skanowanie", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 }
