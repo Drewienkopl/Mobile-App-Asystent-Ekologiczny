@@ -241,5 +241,44 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public double getMonthlyExpenses(String month) {
+        SQLiteDatabase db = getReadableDatabase();
+        double sum = 0;
+
+        Cursor c = db.rawQuery(
+                "SELECT SUM(" + COL_PRICE + ") FROM " + TABLE_PRODUCTS +
+                        " WHERE substr(" + COL_PURCHASE + ",1,7)=?",
+                new String[]{month}
+        );
+
+        if (c.moveToFirst()) {
+            sum = c.getDouble(0);
+        }
+
+        c.close();
+        db.close();
+        return sum;
+    }
+
+    public double getMonthlyReturnedDeposits(String month) {
+        SQLiteDatabase db = getReadableDatabase();
+        double sum = 0;
+
+        Cursor c = db.rawQuery(
+                "SELECT SUM(" + COL_D_VALUE + ") FROM " + TABLE_DEPOSITS +
+                        " WHERE " + COL_D_RETURNED + "=1",
+                null
+        );
+
+        if (c.moveToFirst()) {
+            sum = c.getDouble(0);
+        }
+
+        c.close();
+        db.close();
+        return sum;
+
+    }
+
 
 }
