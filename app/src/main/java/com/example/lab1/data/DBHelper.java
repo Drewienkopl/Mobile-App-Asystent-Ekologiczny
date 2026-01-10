@@ -280,5 +280,95 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
+    public List<CategorySum> getExpenseByCategory(String fromDate, String toDate) {
+        List<CategorySum> list = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor c = db.rawQuery(
+                "SELECT " + COL_CATEGORY + ", SUM(" + COL_PRICE + ") " +
+                        "FROM " + TABLE_PRODUCTS +
+                        " WHERE " + COL_PURCHASE + " BETWEEN ? AND ? " +
+                        "GROUP BY " + COL_CATEGORY,
+                new String[]{fromDate, toDate}
+        );
+        if (c.moveToFirst()) {
+            do {
+                String category = c.getString(0);
+                double sum = c.getDouble(1);
+                list.add(new CategorySum(category, sum));
+            } while (c.moveToNext());
+        }
+        c.close();
+        db.close();
+        return list;
+    }
+
+    public static class CategorySum {
+        public String category;
+        public double sum;
+
+        public CategorySum(String category, double sum) {
+            this.category = category;
+            this.sum = sum;
+        }
+    }
+
+    public double getExpensesInPeriod(String fromDate, String toDate) {
+        SQLiteDatabase db = getReadableDatabase();
+        double sum = 0;
+
+        Cursor c = db.rawQuery(
+                "SELECT SUM(" + COL_PRICE + ") FROM " + TABLE_PRODUCTS +
+                        " WHERE " + COL_PURCHASE + " BETWEEN ? AND ?",
+                new String[]{fromDate, toDate}
+        );
+
+        if (c.moveToFirst()) {
+            sum = c.getDouble(0);
+        }
+
+        c.close();
+        db.close();
+        return sum;
+    }
+
+    public double getAveragePriceForMonth(String month) {
+        SQLiteDatabase db = getReadableDatabase();
+        double avg = 0;
+
+        Cursor c = db.rawQuery(
+                "SELECT AVG(" + COL_PRICE + ") FROM " + TABLE_PRODUCTS +
+                        " WHERE substr(" + COL_PURCHASE + ",1,7)=?",
+                new String[]{month}
+        );
+
+        if (c.moveToFirst()) {
+            avg = c.getDouble(0);
+        }
+
+        c.close();
+        db.close();
+        return avg;
+    }
+
+    public int getExpiredProductsCount() {
+        SQLiteDatabase db = getReadableDatabase();
+        int count = 0;
+
+        Cursor c = db.rawQuery(
+                "SELECT COUNT(*) FROM " + TABLE_PRODUCTS +
+                        " WHERE " + COL_EXPIRY + " < date('now') " +
+                        " AND " + COL_USED + "=0",
+                null
+        );
+
+        if (c.moveToFirst()) {
+            count = c.getInt(0);
+        }
+
+        c.close();
+        db.close();
+        return count;
+    }
 
 }

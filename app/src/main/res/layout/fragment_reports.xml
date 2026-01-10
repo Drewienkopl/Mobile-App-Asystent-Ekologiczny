@@ -39,6 +39,87 @@
             android:layout_height="300dp"
             android:layout_marginTop="16dp"/>
 
+        <TextView
+            android:id="@+id/tvAverage"
+            android:text="Średnia cena: -"
+            android:textSize="16sp"
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tvExpired"
+            android:text="Przeterminowane produkty: -"
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tvFromDate"
+            android:text="Od: wybierz datę"
+            android:textSize="16sp"
+            android:padding="8dp"
+            android:background="@android:drawable/edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tvToDate"
+            android:text="Do: wybierz datę"
+            android:textSize="16sp"
+            android:padding="8dp"
+            android:background="@android:drawable/edit_text"
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnApplyPeriod"
+            android:text="Zastosuj okres"
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tvPeriodExpenses"
+            android:text="Wydatki: -"
+            android:textSize="16sp"
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <!-- Wykres kolowy -->
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pieChart"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:id="@+id/tvCategorySums"
+            android:text="Suma wg kategorii:"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tvCategoryList"
+            android:text="-"
+            android:textSize="15sp"
+            android:layout_marginTop="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
+        <Button
+            android:id="@+id/btnExportHtml"
+            android:text="Eksportuj do HTML"
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
         <Button
             android:id="@+id/btnExport"
             android:text="Eksportuj do CSV"
