@@ -1,0 +1,12 @@
+[
+  {
+    "title": "Big Buck Bunny",
+    "description": "Test video",
+    "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+  },
+  {
+    "title": "Sintel Trailer",
+    "description": "Open movie",
+    "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4"
+  }
+]

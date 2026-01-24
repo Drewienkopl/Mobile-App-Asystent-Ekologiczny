@@ -49,4 +49,8 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     // WYKRESY
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    // VIDEO PLAYER
+    implementation ("com.google.code.gson:gson:2.8.8")
+    implementation("androidx.media3:media3-exoplayer:1.2.1")
+    implementation("androidx.media3:media3-ui:1.2.1")
 }

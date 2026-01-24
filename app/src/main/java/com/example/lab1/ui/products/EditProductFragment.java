@@ -91,7 +91,15 @@ public class EditProductFragment extends Fragment {
         Calendar cal = Calendar.getInstance();
         new DatePickerDialog(requireContext(),
                 (view, year, month, day) -> {
-                    String date = year + "-" + (month + 1) + "-" + day;
+
+                    String date = String.format(
+                            Locale.US,
+                            "%04d-%02d-%02d",
+                            year,
+                            month + 1,
+                            day
+                    );
+
                     target.setText(date);
                 },
                 cal.get(Calendar.YEAR),
@@ -99,6 +107,7 @@ public class EditProductFragment extends Fragment {
                 cal.get(Calendar.DAY_OF_MONTH)
         ).show();
     }
+
 
     private void updateProduct() {
         if (!FormValidator.validateProductForm(

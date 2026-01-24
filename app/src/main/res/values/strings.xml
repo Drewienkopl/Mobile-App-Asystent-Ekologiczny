@@ -10,6 +10,7 @@
     <string name="menu_deposit">Deposit</string>
     <string name="menu_products">Products</string>
     <string name="menu_reports">Reports</string>
+    <string name="menu_video">Video</string>
     <string name="menu_settings">Settings</string>
 
     <string name="hint_nazwa_produktu">Nazwa produktu</string>
