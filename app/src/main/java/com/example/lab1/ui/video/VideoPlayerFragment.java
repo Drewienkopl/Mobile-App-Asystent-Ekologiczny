@@ -21,6 +21,7 @@ import android.view.WindowManager;
 
 import com.example.lab1.MainActivity;
 import com.example.lab1.R;
+import com.example.lab1.data.DBHelper;
 
 public class VideoPlayerFragment extends Fragment {
     private ExoPlayer player;
@@ -124,7 +125,13 @@ public class VideoPlayerFragment extends Fragment {
     public void onStop() {
         super.onStop();
         if (player != null) {
+            long pos = player.getCurrentPosition();
             player.release();
+
+            String url = getArguments().getString("url");
+
+            DBHelper db = new DBHelper(requireContext());
+            db.updateLastWatched(url, System.currentTimeMillis() + "");
         }
     }
 }

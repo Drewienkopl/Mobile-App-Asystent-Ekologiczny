@@ -8,13 +8,16 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 
+import com.example.lab1.ui.video.VideoListFragment;
+import com.example.lab1.ui.video.VideoMaterial;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "eco_assistant.db";
-    private static final int DB_VERSION = 3;
+    private static final int DB_VERSION = 4;
 
 
     public static final String TABLE_PRODUCTS = "products";
@@ -34,6 +37,14 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String COL_D_VALUE = "value";
     public static final String COL_D_BARCODE = "barcode";
     public static final String COL_D_RETURNED = "returned";
+
+
+    public static final String TABLE_VIDEOS = "videos";
+
+    public static final String COL_TITLE = "title";
+    public static final String COL_URL = "url";
+    public static final String COL_THUMBNAIL = "thumbnail";
+    public static final String COL_LASTWATCHED = "lastWatched";
 
     private static final String CREATE_DEPOSITS =
             "CREATE TABLE " + TABLE_DEPOSITS + " (" +
@@ -57,6 +68,16 @@ public class DBHelper extends SQLiteOpenHelper {
                     COL_USED + " INTEGER DEFAULT 0" +
                     ");";
 
+    private static final String CREATE_VIDEOS =
+            "CREATE TABLE " + TABLE_VIDEOS + " (" +
+                    COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COL_TITLE + " TEXT NOT NULL, " +
+                    COL_DESCRIPTION + " TEXT, " +
+                    COL_URL + " TEXT, " +
+                    COL_THUMBNAIL + " TEXT, " +
+                    COL_LASTWATCHED + " TEXT " +
+                    ");";
+
 
     public DBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -67,6 +88,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_PRODUCTS);
         db.execSQL(CREATE_DEPOSITS);
+        db.execSQL(CREATE_VIDEOS);
+
     }
 
 
@@ -74,6 +97,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVer, int newVer) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DEPOSITS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_VIDEOS);
         onCreate(db);
     }
 
@@ -108,6 +132,18 @@ public class DBHelper extends SQLiteOpenHelper {
         return id;
     }
 
+    public long insertVideo(VideoMaterial v) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COL_TITLE, v.getTitle());
+        cv.put(COL_DESCRIPTION, v.getDescription());
+        cv.put(COL_URL, v.getUrl());
+        cv.put(COL_THUMBNAIL, v.getThumbnail());
+
+        long id = db.insert(TABLE_VIDEOS, null, cv);
+        db.close();
+        return id;
+    }
 
     public List<Product> getAllProducts() {
         List<Product> list = new ArrayList<>();
@@ -301,6 +337,38 @@ public class DBHelper extends SQLiteOpenHelper {
         c.close();
         db.close();
         return list;
+    }
+
+    public List<VideoMaterial> getVideos() {
+        List<VideoMaterial> list = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.query(TABLE_VIDEOS, null, null, null, null, null, COL_ID + " DESC");
+
+        if (c.moveToFirst()) {
+            do {
+                long id = c.getLong(c.getColumnIndexOrThrow(COL_ID));
+                String title = c.getString(c.getColumnIndexOrThrow(COL_TITLE));
+                String description = c.getString(c.getColumnIndexOrThrow(COL_DESCRIPTION));
+                String url = c.getString(c.getColumnIndexOrThrow(COL_URL));
+                String thumbnail = c.getString(c.getColumnIndexOrThrow(COL_THUMBNAIL));
+                String last = c.getString(c.getColumnIndexOrThrow(COL_LASTWATCHED));
+
+                VideoMaterial  v = new VideoMaterial(title, description, url, thumbnail);
+                v.setLastWatched(last);
+                list.add(v);
+            } while (c.moveToNext());
+        }
+        c.close();
+        db.close();
+        return list;
+    }
+
+    public void updateLastWatched(String url, String time) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COL_LASTWATCHED, time);
+        db.update(TABLE_VIDEOS, cv, COL_URL + "=?", new String[]{url});
+        db.close();
     }
 
     public static class CategorySum {

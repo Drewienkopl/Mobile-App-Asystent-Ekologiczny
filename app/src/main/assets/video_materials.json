@@ -2,11 +2,13 @@
   {
     "title": "Big Buck Bunny",
     "description": "Test video",
-    "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+    "thumbnail": "https://peach.blender.org/wp-content/uploads/title_anouncement.jpg"
   },
   {
     "title": "Sintel Trailer",
     "description": "Open movie",
-    "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4"
+    "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+    "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Sintel_poster.jpg/640px-Sintel_poster.jpg"
   }
 ]

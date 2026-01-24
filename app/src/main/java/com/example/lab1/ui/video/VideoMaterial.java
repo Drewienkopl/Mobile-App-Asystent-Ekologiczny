@@ -21,11 +21,15 @@ public class VideoMaterial {
     private String title;
     private String description;
     private String url;
+    private String thumbnail;
 
-    public VideoMaterial(String title, String description, String url) {
+    private String lastWatched;
+
+    public VideoMaterial(String title, String description, String url, String thumbnail) {
         this.title = title;
         this.description = description;
         this.url = url;
+        this.thumbnail = thumbnail;
     }
 
     public String getTitle() {
@@ -39,6 +43,14 @@ public class VideoMaterial {
     public String getUrl() {
         return url;
     }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public String getLastWatched() { return lastWatched; }
+
+    public void setLastWatched(String v) { lastWatched = v; }
 
     public List<VideoMaterial> loadVideoMaterialsFromJson(Context context) {
         List<VideoMaterial> videoMaterials = new ArrayList<>();

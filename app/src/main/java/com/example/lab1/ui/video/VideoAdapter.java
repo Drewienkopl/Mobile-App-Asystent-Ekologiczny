@@ -3,14 +3,19 @@ package com.example.lab1.ui.video;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.lab1.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHolder> {
 
@@ -41,6 +46,26 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         holder.tvTitle.setText(video.getTitle());
         holder.tvDescription.setText(video.getDescription());
 
+        Glide.with(holder.itemView.getContext())
+                .load(video.getThumbnail())
+                .into(holder.imgThumb);
+
+        if (holder.tvLastWatched != null) {
+            if (video.getLastWatched() != null && !video.getLastWatched().isEmpty()) {
+                try {
+                    long time = Long.parseLong(video.getLastWatched());
+                    Date date = new Date(time);
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault());
+                    holder.tvLastWatched.setText("Last watched: " + sdf.format(date));
+                } catch (Exception e) {
+                    holder.tvLastWatched.setText("Last watched: never");
+                }
+            }
+            else
+                holder.tvLastWatched.setText("Last watched: never");
+        }
+
         holder.itemView.setOnClickListener(v -> listener.onVideoClick(video));
     }
 
@@ -50,12 +75,15 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     }
 
     static class VideoViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTitle, tvDescription;
+        TextView tvTitle, tvDescription, tvLastWatched;
+        ImageView imgThumb;
 
         public VideoViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvDescription = itemView.findViewById(R.id.tvDescription);
+            imgThumb = itemView.findViewById(R.id.imgThumb);
+            tvLastWatched = itemView.findViewById(R.id.tvLastWatched);
         }
     }
 }

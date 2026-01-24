@@ -64,16 +64,32 @@
         android:id="@+id/nav_video"
         android:name="com.example.lab1.ui.video.VideoListFragment"
         android:label="@string/menu_video"
-        tools:layout="@layout/fragment_video_list" />
-    <action
-        android:id="@+id/action_videoList_to_player"
-        app:destination="@id/videoPlayerFragment"/>
+        tools:layout="@layout/fragment_video_list">
+
+        <action
+            android:id="@+id/action_videoList_to_addVideo"
+            app:destination="@id/addVideoFragment"/>
+
+        <action
+            android:id="@+id/action_videoList_to_player"
+            app:destination="@id/videoPlayerFragment"/>
+
+    </fragment>
 
     <fragment
         android:id="@+id/videoPlayerFragment"
         android:name="com.example.lab1.ui.video.VideoPlayerFragment"
         android:label="Odtwarzacz"
         tools:layout="@layout/fragment_video_player"/>
+
+    <fragment
+        android:id="@+id/addVideoFragment"
+        android:name="com.example.lab1.ui.video.AddVideoFragment"
+        android:label="Add video"/>
+
+    <action
+        android:id="@+id/action_videoList_to_addVideo"
+        app:destination="@id/addVideoFragment"/>
 
     <fragment
         android:id="@+id/nav_settings"
