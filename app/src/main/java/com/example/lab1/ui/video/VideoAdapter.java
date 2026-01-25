@@ -3,6 +3,7 @@ package com.example.lab1.ui.video;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
     public interface OnVideoClickListener {
         void onVideoClick(VideoMaterial video);
+        void onAudioOnlyClick(VideoMaterial video);
     }
 
     private final List<VideoMaterial> videos;
@@ -30,6 +32,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         this.videos = videos;
         this.listener = listener;
     }
+
 
     @NonNull
     @Override
@@ -45,6 +48,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
         holder.tvTitle.setText(video.getTitle());
         holder.tvDescription.setText(video.getDescription());
+
+        ImageButton btnAudioOnly = holder.itemView.findViewById(R.id.btnAudioOnly);
+        btnAudioOnly.setOnClickListener(v -> listener.onAudioOnlyClick(video));
 
         Glide.with(holder.itemView.getContext())
                 .load(video.getThumbnail())
@@ -66,6 +72,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 holder.tvLastWatched.setText("Last watched: never");
         }
 
+        holder.btnAudioOnly.setOnClickListener(v ->
+                listener.onAudioOnlyClick(video)
+        );
         holder.itemView.setOnClickListener(v -> listener.onVideoClick(video));
     }
 
@@ -78,12 +87,15 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         TextView tvTitle, tvDescription, tvLastWatched;
         ImageView imgThumb;
 
+        ImageButton btnAudioOnly;
+
         public VideoViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvDescription = itemView.findViewById(R.id.tvDescription);
             imgThumb = itemView.findViewById(R.id.imgThumb);
             tvLastWatched = itemView.findViewById(R.id.tvLastWatched);
+            btnAudioOnly = itemView.findViewById(R.id.btnAudioOnly);
         }
     }
 }

@@ -53,27 +53,60 @@ public class VideoListFragment extends Fragment {
 
         List<VideoMaterial> videos = db.getVideos();
 
-        videoAdapter = new VideoAdapter(videos, video -> {
-            Bundle b = new Bundle();
-            b.putString("url", video.getUrl());
+        videoAdapter = new VideoAdapter(videos, new VideoAdapter.OnVideoClickListener() {
+            @Override
+            public void onVideoClick(VideoMaterial video) {
+                Bundle b = new Bundle();
+                b.putString("url", video.getUrl());
+                b.putBoolean("audio_only", false);
 
-            NavHostFragment.findNavController(this)
-                    .navigate(R.id.action_videoList_to_player, b);
+                NavHostFragment.findNavController(VideoListFragment.this)
+                        .navigate(R.id.action_videoList_to_player, b);
+            }
+
+            @Override
+            public void onAudioOnlyClick(VideoMaterial video) {
+                Bundle b = new Bundle();
+                b.putString("url", video.getUrl());
+                b.putBoolean("audio_only", true);
+
+                NavHostFragment.findNavController(VideoListFragment.this)
+                        .navigate(R.id.action_videoList_to_player, b);
+            }
         });
+
 
         recyclerView.setAdapter(videoAdapter);
         return view;
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();
-        videoAdapter = new VideoAdapter(db.getVideos(), video -> {
-            Bundle b = new Bundle();
-            b.putString("url", video.getUrl());
-            NavHostFragment.findNavController(this)
-                    .navigate(R.id.action_videoList_to_player, b);
+        videoAdapter = new VideoAdapter(db.getVideos(), new VideoAdapter.OnVideoClickListener() {
+            @Override
+            public void onVideoClick(VideoMaterial video) {
+                Bundle b = new Bundle();
+                b.putString("url", video.getUrl());
+                b.putBoolean("audio_only", false);
+
+                NavHostFragment.findNavController(VideoListFragment.this)
+                        .navigate(R.id.action_videoList_to_player, b);
+            }
+
+            @Override
+            public void onAudioOnlyClick(VideoMaterial video) {
+                Bundle b = new Bundle();
+                b.putString("url", video.getUrl());
+                b.putBoolean("audio_only", true);
+
+                NavHostFragment.findNavController(VideoListFragment.this)
+                        .navigate(R.id.action_videoList_to_player, b);
+            }
         });
+
         recyclerView.setAdapter(videoAdapter);
     }
 }
