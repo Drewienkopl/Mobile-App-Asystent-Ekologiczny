@@ -1,14 +1,38 @@
 [
   {
     "title": "Big Buck Bunny",
-    "description": "Test video",
+    "description": "Blender Open Movie – short animation",
     "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-    "thumbnail": "https://peach.blender.org/wp-content/uploads/title_anouncement.jpg"
+    "thumbnail": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg"
   },
   {
-    "title": "Sintel Trailer",
-    "description": "Open movie",
+    "title": "Sintel",
+    "description": "Epic fantasy short movie",
     "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
-    "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Sintel_poster.jpg/640px-Sintel_poster.jpg"
+    "thumbnail": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/Sintel.jpg"
+  },
+  {
+    "title": "Tears of Steel",
+    "description": "Sci-fi short movie",
+    "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+    "thumbnail": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/TearsOfSteel.jpg"
+  },
+  {
+    "title": "Elephant Dream",
+    "description": "First Blender Open Movie",
+    "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+    "thumbnail": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg"
+  },
+  {
+    "title": "For Bigger Blazes",
+    "description": "Google demo video",
+    "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+    "thumbnail": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerBlazes.jpg"
+  },
+  {
+    "title": "For Bigger Escape",
+    "description": "Google demo video",
+    "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+    "thumbnail": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerEscapes.jpg"
   }
 ]
